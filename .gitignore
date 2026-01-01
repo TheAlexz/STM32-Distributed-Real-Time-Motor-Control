@@ -1,0 +1,48 @@
+# Keil uVision
+*.uvoptx
+*.uvguix.*
+*.uvgui.*
+*.uvguix
+*.uvgui
+*.dsn
+
+# Build Artifacts
+Objects/
+Listings/
+*.axf
+*.htm
+*.lnp
+*.sct
+*.dep
+*.map
+*.lst
+*.d
+*.o
+*.crf
+*.iex
+*.build_log.htm
+
+# Debug Config
+DebugConfig/
+*.dbgconf
+
+# RTE (Runtime Environment) - Keep configuration but ignore generated
+RTE/
+!RTE/Device/
+!RTE/_Client/
+!RTE/_Server/
+!RTE/_Non-distributed/
+!RTE/_Target_1/
+
+# Temporary files
+*.bak
+*.tmp
+*.~*
+
+# JLink / Debugger
+JLinkLog.txt
+*.jlink
+
+# OS specific
+Thumbs.db
+.DS_Store
