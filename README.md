@@ -76,32 +76,30 @@ Priorities differ by build target to optimize for specific roles:
 * **System Main (Priority: AboveNormal):** I.e. `main_id` thread, that handles hardware initialization, network connection establishment, and system reset logic during recovery.
 
 * **Client:**
-* **Sampling Thread (Priority: Idle):** Timer-driven (10ms). Reads encoder data and triggers the network thread.
-* **TxRx Thread (Priority: BelowNormal):** Handles blocking TCP communication. Sends velocity and waits for control data.
-* **Actuation Thread (Priority: Normal):** Unblocked by the TxRx thread upon data receipt to immediately apply the new PWM duty cycle.
-* **Toggle Thread (Priority: Low):** Periodically sends a command to flip the reference direction.
-
+  * **Sampling Thread (Priority: Idle):** Timer-driven (10ms). Reads encoder data and triggers the network thread.
+  * **TxRx Thread (Priority: BelowNormal):** Handles blocking TCP communication. Sends velocity and waits for control data.
+  * **Actuation Thread (Priority: Normal):** Unblocked by the TxRx thread upon data receipt to immediately apply the new PWM duty cycle.
+  * **Toggle Thread (Priority: Low):** Periodically sends a command to flip the reference direction.
 
 * **Server:**
-* **Controller Thread (Priority: BelowNormal):** Calculates the PI control output when triggered by incoming network data.
-* **Reference Thread (Priority: Normal):** Manages the setpoint trajectory.
-* **TxRx Thread (Priority: Low):** Listens for incoming requests and dispatches tasks.
+  * **Controller Thread (Priority: BelowNormal):** Calculates the PI control output when triggered by incoming network data.
+  * **Reference Thread (Priority: Normal):** Manages the setpoint trajectory.
+  * **TxRx Thread (Priority: Low):** Listens for incoming requests and dispatches tasks.
 
 ### 3. Distributed Network (Client-Server)
 
 The system can be compiled into two separate firmware images communicating via **TCP/IP**:
 
 * **Client MCU (The "Body"):**
-* Reads physical sensors (Encoder TIM1).
-* Sends velocity data to the server.
-* Receives control signals and drives the motor (PWM TIM3).
-* *Safety Feature:* Automatically halts motor if TCP connection times out.
-
+  * Reads physical sensors (Encoder TIM1).
+  * Sends velocity data to the server.
+  * Receives control signals and drives the motor (PWM TIM3).
+  * *Safety Feature:* Automatically halts motor if TCP connection times out.
 
 * **Server MCU (The "Brain"):**
-* Generates the reference trajectory.
-* Computes the PI control output based on received velocity.
-* Returns the actuation command to the client.
+  * Generates the reference trajectory.
+  * Computes the PI control output based on received velocity.
+  * Returns the actuation command to the client.
 
 * **Low-Latency TCP:** The socket is configured with the `SF_TCP_NODELAY` flag. This disables Nagle’s algorithm, forcing immediate transmission of control packets (4-byte payloads) without buffering, ensuring real-time responsiveness.
 
@@ -233,8 +231,8 @@ The project is configured with distinct Targets in Keil. Select the one matching
 3. **Network:** Connect both boards via Ethernet cable (Direct or via Switch).
 4. **IP Configuration:**
 * **Device IPs:** Local static IPs are configured in `main.c` / `Ethernet_Config` struct (Default: Client `192.168.0.11`, Server `192.168.0.10`).
-* **Target IP (Client Code):** The Client specifically targets the Server at `192.168.0.10`. To change the destination, modify the `server_addr` array in `Source/app-client.c`.
-
+   * **Device IPs:** Local static IPs are configured in `main.c` / `Ethernet_Config` struct (Default: Client `192.168.0.11`, Server `192.168.0.10`).
+   
 ### 🔌 Monitoring & Debugging
 
 The application outputs system status logs via UART (printf). To view the connection sequence and real-time state:
@@ -242,8 +240,8 @@ The application outputs system status logs via UART (printf). To view the connec
 1. Connect the Nucleo board via USB.
 2. Open a Serial Terminal (e.g., **PuTTY**, **TeraTerm**).
 3. Connect to the board's COM port (Settings: **115200 baud**, 8 Data bits, No Parity, 1 Stop bit).
-* *Client Logs:* Displays socket connection attempts (`C > ...`) and disconnect warnings.
-* *Server Logs:* Displays listening status (`S > ...`) and client connections.
+   * *Client Logs:* Displays socket connection attempts (`C > ...`) and disconnect warnings.
+   * *Server Logs:* Displays listening status (`S > ...`) and client connections.
 
 
 ### 🩺 Troubleshooting Guide
